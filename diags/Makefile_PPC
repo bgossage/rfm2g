@@ -1,0 +1,77 @@
+################################################################################
+#                            COPYRIGHT NOTICE
+#
+# Copyright (c) 2006, 2008, GE Intelligent Platforms, Inc.
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer.  Redistributions in binary
+# form must reproduce the above copyright notice, this list of conditions and
+# the following disclaimer in the documentation and/or other materials provided
+# with the distribution.  Neither the name of the GE Intelligent Platforms, Inc.
+# nor the names of its contributors may be used to endorse or promote products
+# derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+# 
+################################################################################
+#   @(#)Makefile_PPC 
+###########################################################################
+#   Makefile for RFM2g utility on PPC boards
+###########################################################################
+#
+#   Revision History:
+#   Date         Who  Ver   Reason For Change
+#   -----------  ---  ----  -----------------------------------------------
+#
+###########################################################################
+ARCH             := ppc
+KER_ROOT          = /home/vmisft-7436_R01_07/LSP_7436/
+KER_HPATH         = $(KER_ROOT)include
+KER_APIPATH       = $(KER_ROOT)include/net/rfm2g
+KER_LPATH         = $(KER_ROOT)lib
+
+HOSTCC            = gcc
+CROSS_COMPILE     = powerpc-linux-
+CC                = $(CROSS_COMPILE)gcc
+
+HPATH             = $(KER_HPATH)/
+APIPATH           = $(KER_APIPATH)/
+LPATH             = ../lib/
+EXE1_FILE          = rfm2g_util
+EXE_HDRS          = $(APIPATH)rfm2g_ioctl.h $(APIPATH)rfm2g_regs.h \
+			$(APIPATH)rfm2g_struct.h $(APIPATH)rfm2g_types.h \
+			$(APIPATH)rfm2g_version.h $(APIPATH)rfm2g_api.h \
+			$(APIPATH)rfm2g_defs.h $(APIPATH)rfm2g_errno.h
+EXE_LIBS          = $(LPATH)librfm2g.a
+EXE1_SRCS          = $(EXE1_FILE).c
+EXE1_OBJS          = $(EXE1_FILE).o
+
+DST_PATH          = /mnt/redhaggis/root
+CCFLAGS		= -DRFM2G_LINUX -DCONFIG_DEVFS_FS
+
+export	ARCH KER_ROOT KER_HPATH KER_LPATH HOSTCC CROSS_COMPILE CC HPATH APIPATH
+
+all: $(EXE1_FILE)
+
+$(EXE1_FILE): $(EXE1_SRCS) $(EXE_LIBS)
+	$(CC) $(CCFLAGS) -I$(KER_HPATH) -I$(APIPATH) -L$(KER_LPATH) -L$(LPATH) -lpthread $^ -o $@
+
+clean:
+	rm -f $(EXE1_OBJS) $(EXE1_FILE)
+
+install:
+	cp $(EXE1_FILE) $(DST_PATH)
+

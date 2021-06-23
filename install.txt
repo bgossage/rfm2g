@@ -1,0 +1,343 @@
+SFT-RFM2G-LNX 
+RFM2g Shared Memory Device driver for Linux
+
+
+This document explains how to install the RFM2g driver, including
+kernel boot options that may be necessary.  Also, the allocation
+of buffers dedicated for DMA transfers to/from reflective memory 
+is discussed.
+
+
+CONTENTS
+1.  RFM2G DRIVER INSTALLATION
+2.  RFM2G DRIVER UNINSTALLATION
+3.  PREVENTING PROBLEMS MAPPING REFLECTIVE MEMORY INTO VIRTUAL SPACE
+4.  DMA BUFFER ALLOCATION
+
+
+#############################################################################
+1.  RFM2G DRIVER INSTALLATION
+
+
+Prior to installing the RFM2g driver, remove power from the computer and
+insert the RFM2g board into a PCI or PMC slot.  Boot the computer.
+
+Uninstall any other existing RFM2g driver from the computer.  See
+RFM2G DRIVER UNINSTALLATION below.
+
+The RFM2g driver is distributed as a tarfile with a name similar to
+162-RFM2G-DRV-LNX_R09_00-000.tgz.  The revision of the driver is included in
+the filename (here, rev. R09.00) and may be different than your tarfile.
+
+Copy the tarfile to the desired directory and execute the command (using
+the filename of your tarfile):
+
+    tar xvofz 162-RFM2g-DRV-LNX_R09_00-000.tgz
+
+A new directory called rfm2g containing the RFM2g driver source code is 
+created.  Change to the rfm2g directory.
+
+The RFM2g driver uses a unified Makefile for uniprocessor and SMP machines.
+While logged in as root, build the driver, API library, and diagnostic 
+program by entering:
+
+    make install
+
+The diagnostic program is a commandline interpreter that allows the user to
+exercise various RFM2g API commands from the keyboard.  Change to the 
+rfm2g/diags directory and enter
+    
+    ./rfm2g_util
+    
+Enter "help" to display a list of commands. 
+
+NOTE:  An "allocation failed" error may occur when starting rfm2g_util.
+See PREVENTING PROBLEMS MAPPING REFLECTIVE MEMORY INTO VIRTUAL SPACE below
+for a solution.
+
+
+#############################################################################
+2.  RFM2G DRIVER UNINSTALLATION
+
+
+To uninstall the RFM2g driver, log in as root and change to the rfm2g 
+directory.  Enter the command:
+
+    make uninstall clean
+
+This uninstalls everything except the original source code.
+
+To completely remove the source code, simply delete the rfm2g directory.
+
+
+#############################################################################
+3.  PREVENTING PROBLEMS MAPPING REFLECTIVE MEMORY INTO VIRTUAL SPACE
+
+Linux kernels based on x86 32-bit systems are limited to only 4GB of virtual 
+address space.  Standard Linux kernels split this 4GB space into 3GB for  
+user space and 1GB for the kernel.  The kernel creates a direct mapping of 
+installed system memory, I/O mapping requests by drivers, and other I/O 
+resources.  By default, standard kernels reserve 128MB to handle these 
+mappings. 
+
+Available virtual address space can be quickly exhausted when the kernel maps 
+1GB or more of system memory, and then attempts to map the memory of one or 
+more RFM2g boards (each containing up to 256MB RAM).
+
+The kernel attempts to map an RFM2g board when an application makes the first 
+call to the RFM2gOpen() API function.  If virtual address space becomes 
+exhausted while doing this the following error(s) may occur:
+
+    allocation failed: out of vmalloc space - use vmalloc= to increase size. 
+
+    Rfm2gX: Exiting RFM2gOpen(): Unable to map RFM memory/CS register/OR 
+        register space      (where X is the unit number 0, 1, 2, etc.)
+
+
+Suggest Solutions:
+
+A.  Increase reserved VMALLOC space (Linux kernels 2.6.9 and later).
+
+Use the "vmalloc=xxxM" boot parameter to increase the space used for mapping
+virtual memory.  Usually, "vmalloc=192M" or "vmalloc=256M" will work.
+
+NOTE:  This approach can cause a kernel panic during bootup if initrd is
+used.  Check with your bootloader documentation if you run into booting
+problems after adding the "vmalloc=xxxM" boot parameter.  For some versions
+of Grub you can add the line "uppermem 524288" or "uppermem 256000" just
+above the "kernel" line of the kernel you are booting in the Grub
+configuration file (usually /boot/grub/grub.conf) - please see the Grub
+documentation.  With "uppermem" specified, the vmalloc boot parameter may
+be used without causing a kernel panic.
+
+An example grub.conf entry using uppermem and vmalloc is shown below:
+
+title Red Hat Enterprise Linux Client RFM PAE DRIVER (2.6.18-8.el5PAE)
+	root (hd0,7)
+	uppermem 256000
+	kernel /vmlinuz-2.6.18-8.el5PAE ro root=/dev/VolGroup00/LogVol00 rhgb 
+	    quiet vmalloc=192M
+	initrd /initrd-2.6.18-8.el5PAE.img
+
+NOTE:  The "kernel" line shown above should be all on one line.  In this
+example it is shown broken into two lines between "rhgb" and "quiet".
+
+
+B.  Increase reserved VMALLOC space (Linux kernels prior to 2.6.9).
+
+The "vmalloc=xxxM" boot parameter is normally not available in these 
+kernels.  A kernel rebuild is required if this boot parameter is not 
+available.  To increase vmalloc space the value of "__VMALLOC_RESERVE" 
+must be increased in the kernel source code. Usually, increasing this 
+to 192 or 256 will work.  After changing __VMALLOC_RESERVE, follow 
+the instructions in your Linux distribution to rebuild the kernel.
+
+
+C.  Reduce the amount of system RAM available to the kernel.
+
+Use the "mem=xxxM" boot parameter to tell the Linux how much RAM to use 
+or physically remove installed system RAM.  Reducing available RAM will 
+reduce the required system RAM mapping entries, which will leave more room
+for other entries.  The value specified with "mem=xxxM" must be less than 
+the total amount of RAM installed in the system.  Usually, the value 
+for this boot parameter must be set below 1GB for this to work.  Values 
+such as "mem=768M" or "mem=512M" may be successful.
+
+NOTE: This approach can cause a kernel panic during bootup if initrd is
+used.  Check with your bootloader documentation if you run into booting 
+problems after adding the "mem=xxxM" boot parameter.  For some versions 
+of Grub you can add the line "uppermem 524288" or "uppermem 256000" 
+just above the "kernel" line of the kernel you are booting in the Grub 
+configuration file (usually in /boot/grub/grub.conf).  Refer to the Grub 
+documentation.
+
+An alternative to "mem=xxxM" is the "max_addr=nnn" boot parameter, where
+nnn is the decimal number of bytes of RAM available to Linux.  The value 
+specified with "max_addr=nnn" must be less than the total amount of RAM 
+installed in the system.
+
+
+D.  Use a custom kernel with a non-standard virtual space split ratio.
+
+There are kernel patches and Linux distributions that allow modification of 
+the standard 1GB:3GB, kernel:user virtual space split ratio (e.g. 1.5:2.5, 
+2:2, 4:4, etc.).  There has been no testing at GEFES for any of these, so we 
+cannot recommend any particular patch or distribution.
+
+
+E.  Map less than the total reflective memory on the RFM2g board.
+
+By default, the total reflective memory on the RFM2g board is mapped during
+the first call to RFM2gOpen().  The RFM2g driver source code may be edited
+to limit the amount of reflective memory to be mapped.
+
+Locate the rfm2gInitDevice() function inside driver/device_init.c.  Search
+for the following statement:
+
+    switch (csr)
+    {
+        case 0:
+            cfg->MemorySize = 64*1024*1024;
+            break;
+
+       case (1<<20):
+            cfg->MemorySize = 128*1024*1024;
+            break;
+
+       case (2<<20):
+            cfg->MemorySize = 256*1024*1024;
+            break;
+        default:
+            cfg->MemorySize = 0;
+    }
+    
+This switch statement initializes the MemorySize based on bits in an RFM2g
+board register.  The MemorySize variable is used later to indicate how
+much reflective memory to map into virtual address space.  
+
+As an example, to map only 16MB of a 128MB reflective memory board, change
+the one line:
+
+    from:   cfg->MemorySize = 128*1024*1024;
+    to:     cfg->MemorySize = 16*1024*1024;
+    
+After rebuilding and reinstalling the RFM2g driver, the RFM2gOpen() should
+succeed.
+    
+
+F.  Use a 64-bit platform and kernel.
+
+
+#############################################################################
+4.  DMA BUFFER ALLOCATION
+
+The RFM2g Driver for Linux supports DMA transfers between a user process
+and reflective memory.  Scatter-gather DMA is not supported, so a buffer
+of contiguous RAM must be allocated and used for DMA transfers.  To guarantee
+the DMA buffer consists of contiguous RAM, it is necessary to prevent access
+to the RAM by Linux.  This is accomplished using a boot parameter to reserve
+a portion of high memory.  Later, a user process may use an RFM2g API function
+to allocate and map a DMA buffer in the reserved high memory area.
+
+To reserve a DMA buffer in the high memory area, use the "mem=xxxM" boot 
+parameter to tell the Linux how much RAM to use.  An alternative to 
+"mem=xxxM" is the "max_addr=nnn" boot parameter, where nnn is the decimal 
+number of bytes of RAM available to Linux.  The value specified with 
+"max_addr=nnn" must be less than the total amount of RAM installed in the 
+system.  The value is calculated as shown:
+
+    max_addr value = (total installed RAM) - (desired size of DMA buffer)
+
+For example, to reserve a 16MB DMA buffer in a system with 2GB of total
+installed RAM,
+
+    max_addr value = (2*1024*1024*1024) - (16*1024*1024)
+    max_addr value = 2130706432
+
+Using "mem=2032M" also reserves 16MB out of a total installed 2048MB RAM.
+
+The boot parameter is added to the "kernel" line of the kernel you are 
+booting in the Grub configuration file (usually in /boot/grub/grub.conf).  
+Refer to the Grub documentation.
+
+NOTE: This approach can cause a kernel panic during bootup if initrd is
+used.  Check with your bootloader documentation if you run into booting 
+problems after adding the "max_addr=nnn" boot parameter.  For some versions 
+of Grub you can add the line "uppermem 524288" or "uppermem 256000" 
+just above the "kernel" line of the kernel you are booting in the Grub 
+configuration file (usually in /boot/grub/grub.conf).  Refer to the Grub 
+documentation.
+
+An example grub.conf entry using uppermem, max_addr, and vmalloc is 
+shown below:
+
+title Red Hat Enterprise Linux Client RFM PAE DRIVER (2.6.18-8.el5PAE)
+	root (hd0,7)
+	uppermem 256000
+	kernel /vmlinuz-2.6.18-8.el5PAE ro root=/dev/VolGroup00/LogVol00 rhgb 
+	    quiet max_addr=2130706432 vmalloc=192M
+	initrd /initrd-2.6.18-8.el5PAE.img
+
+NOTE:  The "kernel" line shown above should be all on one line.  In this
+example it is shown broken into two lines between "rhgb" and "quiet".
+
+With the upper memory reserved at bootup, user applications may call RFM2g
+API functions to allocate and map a buffer dedicated for DMA transfers to/from
+reflective memory.  The following example illustrates the technique.  Note
+that for brevity, status checking of RFM2g API return codes is omitted.
+
+
+#include "rfm2g_api.h"
+int sample()
+{
+    RFM2GHANDLE            Handle          = NULL;
+    RFM2G_UINT32           dmaBuffSize     = 16*1024*1024;
+    RFM2G_UINT32           dmaBuffPageSize = dmaBuffSize / PAGE_SIZE;
+    volatile RFM2G_UINT32 *pDmaBuffer = NULL;  /* Pointers to mapped buffers 
+                                                  must be volatile */
+    RFM2G_UINT64           dmaBuffPhysAddr = 0x7F000000;  /* Base physical 
+                                                  address of the beginning of
+                                                  reserved upper memory. 
+                                                  This is the hexadecimal 
+                                                  representation of 
+                                                  2130706432 */
+
+
+    /* Open the Reflective Memory device */
+    RFM2gOpen("/dev/rfm2g0/", &Handle);
+
+    /* Allocate and map the DMA buffer.  OR the RFM2G_DMA_MMAP_OFFSET with
+       the physical address to indicate we want a pointer to a DMA buffer
+       instead of a pointer to reflective memory.  Don't forget the 
+       (volatile void **) cast.  */
+    RFM2gUserMemory(Handle, (volatile void **)(&pDmaBuffer), 
+        dmaBuffPhysAddr | RFM2G_DMA_MMAP_OFFSET, dmaBuffPageSize);
+
+    /* Set the DMA threshold less than dmaBuffSize to enable DMA operation */
+    RFM2gSetDMAThreshold(Handle, 100);
+
+    /* Use DMA to write data from the DMA buffer to offset 0 in 
+       reflective memory */
+    RFM2gWrite(Handle, 0, (void *)pDmaBuffer, dmaBuffSize);
+
+    /* Unmap the DMA buffer.  Don't forget the (volatile void **) cast.  */
+    RFM2gUnMapUserMemory(Handle, (volatile void **)(&pDmaBuffer), 
+        dmaBuffPageSize);
+
+    /* Close the Reflective Memory device */
+    RFM2gClose(&Handle);
+
+    return 0;
+}
+
+
+
+
+
+
+!**********************************************************************
+WARNING FOR LEGACY SYSTEMS:  RESERVING A DMA BUFFER FROM LINUX RH 7.3 
+BY USING THE "mem=" BOOT LINE PARAMETER MAY NOT RESERVE AS MUCH AS IT 
+DID FOR EARLIER VERSIONS OF LINUX.  TO MAKE SURE ALL OF YOUR MEMORY IS 
+AVAILABLE FOR MAPPING PLEASE LOOK AT THE "/proc/iomem" FILE AND CHECK 
+THE LINE THAT LOOKS LIKE:
+
+00100000-~~~~~~~~: SYSTEM RAM
+
+THE VALUE SHOWN WHERE ~~~~~~ IS WILL INDICATE THE HIGHEST ADDRESS
+THAT LINUX IS USING.  IF THIS OVERLAPS THE VALUE YOU PLAN TO MAP
+YOU WILL HAVE TO LOWER THE "mem=" VALUE UNTIL THE VALUE SHOWN IN
+iomem IS LOWER THAN YOUR DESIRED STARTING ADDRESS.  
+
+FOR EXAMPLE  IF YOU BOOT LINUX WITH "mem=127M" YOU WOULD EXPECT
+THE FIRST ADDRESS YOU COULD USE FOR DMA BUFFER WOULD BE 0x07F00000.
+iomem COULD SHOW THIS:
+
+00100000-07F607FF: SYSTEM RAM
+
+THIS OVERLAPS YOUR DESIRED BUFFER AREA BY 0x00607FF BYTES.  IF YOU
+BOOT LINUX WITH "mem=126M" iomem SHOWS:
+
+00100000-07E607FF: SYSTEM RAM
+
+WHICH DOES NOT OVERLAP YOUR DESIRED AREA

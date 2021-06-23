@@ -1,0 +1,101 @@
+###########################################################################
+#                           COPYRIGHT NOTICE
+#
+#   Copyright (C) 2004, 2008 GE Intelligent Platforms, Inc.
+#   International Copyright Secured.  All Rights Reserved.
+#
+###########################################################################
+#   @(#)Makefile2.4 01.04 GE Intelligent Platforms, Inc.
+###########################################################################
+#   Makefile for the RFM2g device driver (Linux)
+###########################################################################
+#
+#   Revision History:
+#   Date         Who  Ver   Reason For Change
+#   -----------  ---  ----  -----------------------------------------------
+#   11-OCT-2001  ML   01.00 Created.
+#   30-SEP-2002  ML   01.01 Added support for RH 7.3
+#   24-SEP-2003  EB   01.02 Call the fixupflags.sh script to enable a 
+#                           successful build on Red Hat 7.2, 8.0, or 9.0.
+#                           Choose an INCLUDEDIR appropriate to the kernel
+#                           version.
+#   26-JAN-2005  ML   01.05 Added -DEXPORT_SYMTAB to CFlags so depmod is 
+#                           Happy
+#
+###########################################################################
+
+FIXUPFLAGS:=$(shell ./fixupflags.sh)
+KERNELREV=$(shell uname -r)
+KERNELBASE=/lib/modules/$(KERNELREV)
+KERNELSRC=$(KERNELBASE)/build
+INCLUDEDIR=$(KERNELSRC)/include
+VERSION_FILE=/usr/include/linux/version.h
+RFM2G_MODDIR=$(KERNELBASE)/rfm2g
+RFM2G_BOOT=/etc/rc.d/init.d
+RFM2G_BOOT3=/etc/rc.d/rc3.d/S50rfm2g
+RFM2G_BOOT5=/etc/rc.d/rc5.d/S50rfm2g
+
+
+# Extract version number from headers
+VER = -DKERN$(shell awk '/LINUX/ {printf("%X", $$3/256)}' $(VERSION_FILE) )
+
+CFLAGS = -D__KERNEL__ -DMODULE -DMODVERSIONS $(VER) -DEXPORT_SYMTAB -O -Wall \
+         -I$(INCLUDEDIR) \
+         -I../include -include $(KERNELSRC)/include/linux/modversions.h \
+         $(FIXUPFLAGS)
+
+# What we are building
+OBJS = rfm2g.o
+
+HFILES = ../include/rfm2g_defs.h      \
+         ../include/rfm2g_errno.h     \
+         ../include/rfm2g_ioctl.h     \
+         ../include/rfm2g_kinc.h      \
+         ../include/rfm2g_regs.h      \
+         ../include/rfm2g_struct.h    \
+         ../include/rfm2g_types.h     \
+         ../include/rfm2g_version.h
+
+all: $(OBJS)
+
+rfm2g.o: driver_init.o proc_page.o driver_entry.o device_probe.o \
+         device_init.o interrupts.o
+	$(LD) -r $^ -o $@
+
+driver_init.o:   $(HFILES) Makefile driver_init.c
+proc_page.o:     $(HFILES) Makefile proc_page.c
+driver_entry.o:  $(HFILES) Makefile driver_entry.c
+device_probe.o:  $(HFILES) Makefile device_probe.c
+device_init.o:   $(HFILES) Makefile device_init.c
+interrupts.o:    $(HFILES) Makefile interrupts.c
+
+install: all
+	install -d ${RFM2G_MODDIR}
+	install -m0644 -p rfm2g.o ${RFM2G_MODDIR}
+	install -m0755 -p ../rfm2g_init ${RFM2G_BOOT}/rfm2g_init
+	install -m0755 -p ../rfm2g_load ${RFM2G_BOOT}/rfm2g_load
+	install -m0755 -p ../rfm2g_unload ${RFM2G_BOOT}/rfm2g_unload
+	ln -f -s ../init.d/rfm2g_init ${RFM2G_BOOT3}
+	ln -f -s ../init.d/rfm2g_init ${RFM2G_BOOT5}
+	sh ../rfm2g_load
+
+# Clean up intermediate files
+clean:
+	rm -f *.o core
+#
+uninstall: clean
+	sh ../rfm2g_unload
+	rm -f ${RFM2G_MODDIR}/rfm2g.o
+	rm -f ${RFM2G_BOOT3}
+	rm -f ${RFM2G_BOOT5}
+	rm -f ${RFM2G_BOOT}/rfm2g_init
+	rm -f ${RFM2G_BOOT}/rfm2g_load
+	rm -f ${RFM2G_BOOT}/rfm2g_unload
+	rmdir ${RFM2G_MODDIR}
+
+
+
+
+
+
+

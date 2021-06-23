@@ -1,0 +1,35 @@
+ARCH             := ppc
+KER_ROOT          = /home/vmisft-7436_R01_07/LSP_7436/
+KER_HPATH         = $(KER_ROOT)include
+KER_APIPATH       = $(KER_ROOT)include/net/rfm2g
+KER_LPATH         = $(KER_ROOT)lib
+
+HOSTCC            = gcc
+CROSS_COMPILE     = powerpc-linux-
+CC                = $(CROSS_COMPILE)gcc
+
+HPATH             = $(KER_HPATH)/
+APIPATH           = $(KER_APIPATH)/
+LPATH             = ../lib/
+LIB_FILE          = $(LPATH)librfm2g.a
+LIB_HDRS          = $(APIPATH)rfm2g_ioctl.h $(APIPATH)rfm2g_regs.h \
+			$(APIPATH)rfm2g_struct.h $(APIPATH)rfm2g_types.h \
+			$(APIPATH)rfm2g_version.h $(APIPATH)rfm2g_api.h \
+			$(APIPATH)rfm2g_defs.h $(APIPATH)rfm2g_errno.h
+LIB_SRCS          = open.c close.c transfer.c util.c config.c event.c rfm2g_errno.c
+LIB_OBJS          = open.o close.o transfer.o util.o config.o event.o rfm2g_errno.o
+
+export	ARCH KER_ROOT KER_HPATH KER_LPATH HOSTCC CROSS_COMPILE CC HPATH APIPATH
+
+all: $(LIB_FILE)
+
+$(LIB_FILE): $(LIB_OBJS)
+	ar -cruvs ${LIB_FILE} $?
+
+$(LIB_SRCS: $(LIB_HDRS)
+
+$(LIB_OBJS): $(LIB_SRCS)
+	$(CC) -I$(KER_HPATH) -I$(HPATH) -I$(APIPATH) -c $^
+
+clean:
+	rm -f $(LIB_OBJS) $(LIB_FILE)

@@ -1,0 +1,122 @@
+@(#)RELEASE NOTES GE Intelligent Platforms, Inc.
+
+Copyright (C) 2002, 2005-2014 GE Intelligent Platforms, Inc.
+International Copyright Secured.  All Rights Reserved.
+
+IMPORTANT:  Always rebuild and relink your application whenever the
+            RFM2g Driver has been upgraded to a new version.
+
+Version R09.00
+o Supports for Ubuntu 14.04 64bit and Fedora 20 64bit
+   Limited unit testing has been performed on this driver version.  Product Acceptance testing has not been performed at the time of this release.
+o Corrected interruptible state DMA race condition which occasionally prevented the user thread from being notified (i.e., woken up).
+
+Version B08.01
+o Support for Fedora 12 32-Bit Linux
+  Note that this beta version has only been tested with this
+  distribution.
+
+Version R07.03
+o The rfm2g_util now stores the pointer returned by the mapuser and
+  mapuserbytes commands.  Subsequent calls to unmapuser or unmapuserbytes
+  uses the stored pointer and no longer requires the pointer value to be
+  manually entered.
+o Corrected a problem in the rfm2g_util Performance Test command that
+  prevented DMA operations.
+o Corrected a problem with mapping small memory windows in the RFM2gOpen()
+  function.
+
+Version R06.04______________________________________________________________
+o Added support for DMA in systems with greater than 4 GB RAM running
+  64-bit Linux or Linux with PAE (Physical Address Extension)
+o Added support for RFM Sliding Windows.
+
+Version R05.02______________________________________________________________
+o Updated manual.txt file.
+
+Version R05.01______________________________________________________________
+o Added support for 64 bit machines.
+o Added support for Fedora 8.
+
+Version R04.01  ____________________________________________________________
+o Added support Fedora Core 6.
+
+Version R04.00  ____________________________________________________________
+o Added support for 256 MB RFM2g device.
+
+Version R03.01  ____________________________________________________________
+o Corrected Driver mmap under PPC to return non-cached memory.
+o Added revision BuildId to config info.
+o Updated rfm2g_util config command to display BuildId in config info.
+o Corrected BoardRevision and RevisionId in config info.
+
+Version R03.00  ____________________________________________________________
+o Corrected Driver Returns Wrong Device Name Under Red Haggis Linux
+
+Version R02.01  ____________________________________________________________
+o Release package tested by Product Acceptance
+
+Version B01.23  ____________________________________________________________
+o Fixed memop parameter validation in the rfm2g_util.c
+o Clarified Bad Parameter definitions in rfm2g_errno.c are for RFM2g API calls.
+
+Version B01.22  ____________________________________________________________
+o Fixed some parameter validation in the rfm2g_util.c
+o Fixed RFM2gWaitForEvent() returns wrong status code after cancelled by RFM2gCalcelWaitForEvent().
+o Fixed "cleareventcount 12" in rfm2g_util on Linux, the reset event counter was not cleared.
+
+Version B01.19  ____________________________________________________________
+
+o Updated rfm2g_util, rfm2g_map, rfm2g_sender, and rfm2g_receiver main()
+  to standard C types.
+o Added flash command to rfm2g_util program
+
+Version B01.18  ____________________________________________________________
+
+o Updated driver to use Shared RFM2g API headers
+o Implemented additional RFM2g API functions
+o Fixed issues reported by Product Acceptance testing
+o Error events enabled by default in rfm2gInitDevice()
+o Changed DMA settings to use PCI Mem Read Multiple
+
+Version B01.06  ____________________________________________________________
+
+o Added support for X86 kernels up to 2.6.14
+o Change installing/removing interrupt handler to first open last close
+o Added mutex protection to read and write when using DMA
+o Corrected bug in WaitForInterrupt uncorrectly handle timeout and added handling for waking up on a signal
+o Remove restriction in enable and disable event if already enabled or disabled
+o Fixed all compile warnings
+o Improved API handling of invalid handles
+o Corrected bugs in diag utility
+
+Version R01.05  ____________________________________________________________
+
+o   Minor changes and cleanup for release of 2.6 support
+
+Version C01.04  ____________________________________________________________
+
+o   Added support for kernel 2.6 and still support 2.4 kernel.
+o   Changed Rfm2gConfig structure to isolate kernel only items from user side.
+o   Changed Makefile structure to use only Makefile for SMP and uniprocessor.
+
+Version B01.03  ____________________________________________________________
+
+o   Added support for kernel 2.6
+o   NOTE the SMP hack in ./include/rfm2g_struct.h. It will be changed before
+    the release the spinlock_t will become a pointer.
+
+Version R01.02  ____________________________________________________________
+
+o   Added support for RH 8.0 and 9.0
+
+
+Version R01.01  ____________________________________________________________
+
+o   Added support for RH 7.3
+
+
+Version R01.00  ____________________________________________________________
+
+o   Initial Release.
+

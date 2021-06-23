@@ -1,0 +1,60 @@
+#!/bin/sh
+###########################################################################
+#                           COPYRIGHT NOTICE
+#
+#   Copyright (C) 2001, 2004, 2008 GE Intelligent Platforms, Inc.
+#   International Copyright Secured.  All Rights Reserved.
+#
+###########################################################################
+#   @(#)rfm2g_init 01.04 GE Intelligent Platforms, Inc.
+###########################################################################
+#   This shell script takes care of starting and stopping
+#   SFT-RFM2g-abc-450 driver.
+###########################################################################
+#
+#   Revision History:
+#   Date         Who  Ver   Reason For Change
+#   -----------  ---  ----  -----------------------------------------------
+#   14-NOV-2001  ML   1.0   Created.
+#   24-SEP-2003  EB   01.02 Support added for Red Hat(tm) 8.0 and 9.0.
+#   07-DEC-2004  ML   01.04 Changed CR info to GE   Embedded Systems
+#
+###########################################################################
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# See how we were called.
+case "$1" in
+  start)
+        # load driver module.
+        echo  "Starting rfm2g driver: "
+
+        if sh /etc/rc.d/init.d/rfm2g_load 
+        then
+            action "rfm2g driver: " /bin/true
+        else
+            action "rfm2g driver: " /bin/false
+        fi
+        ;;
+  stop)
+        # uload driver module.
+        echo "Stopping rfm2g driver: "
+
+	if sh /etc/rc.d/init.d/rfm2g_unload
+	then
+	    action "rfm2g driver: " /bin/true
+	else
+	    action "rfm2g driver: " /bin/false
+	fi
+        ;;
+  restart|reload)
+	sh $0 stop
+	sh $0 start
+	;;
+  *)
+        echo "Usage: rfm2g_init {start|stop|restart|reload}"
+        exit 1
+esac
+
+exit 0

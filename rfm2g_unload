@@ -1,0 +1,37 @@
+#!/bin/sh
+###########################################################################
+#                           COPYRIGHT NOTICE
+#
+#   Copyright (C) 2001, 2004, 2008 GE Intelligent Platforms, Inc.
+#   International Copyright Secured.  All Rights Reserved.
+#
+###########################################################################
+#   @(#)rfm2g_unload 01.04 GE Intelligent Platforms, Inc.
+###########################################################################
+#   Uninstallation shell script for the RFM2g device driver (Linux)
+###########################################################################
+#
+#   Revision History:
+#   Date         Who  Ver   Reason For Change
+#   -----------  ---  ----  -----------------------------------------------
+#   14-NOV-2001  ML   1.0   Created.
+#   24-SEP-2003  EB   01.02 Support added for Red Hat(tm) 8.0 and 9.0.
+#   07-DEC-2004  ML   01.04 Changed CR to GE   Embedded Systems
+#
+###########################################################################
+
+DEVICE="rfm2g"
+
+echo
+
+# Remove the module
+/sbin/rmmod ${DEVICE} $* || exit 1
+echo "Module "${DEVICE}" has been removed."
+
+# Remove character device nodes
+rm -f /dev/${DEVICE}[0-4]
+echo "Device nodes /dev/"${DEVICE}"[0-4] have been removed."
+
+echo
+
+exit 0

@@ -1,0 +1,73 @@
+#!/bin/sh
+###########################################################################
+#                           COPYRIGHT NOTICE
+#
+#   Copyright (C) 2001, 2004, 2008 GE Intelligent Platforms, Inc.
+#   International Copyright Secured.  All Rights Reserved.
+#
+###########################################################################
+#   @(#)rfm2g_load 01.04 GE Intelligent Platforms, Inc.
+###########################################################################
+#   Installation shell script for the RFM2g device driver (Linux)
+###########################################################################
+#
+#   Revision History:
+#   Date         Who  Ver   Reason For Change
+#   -----------  ---  ----  -----------------------------------------------
+#   14-NOV-2001  ML   1.0   Created.
+#   24-SEP-2003  EB   01.02 Support added for Red Hat(tm) 8.0 and 9.0.
+#   07-DEC-2004  ML   01.04 Changed CR to GE   Embedded Systems, Inc.
+#                           Added suport for both 2.4 and 2.6 kernel
+#
+###########################################################################
+
+PATCHLEVEL=`uname -r | cut -d. -f2`
+
+if [ ${PATCHLEVEL} = 4 ]; then
+MODULE=rfm2g.o
+MOD_DIR=/lib/modules/`uname -r`/rfm2g
+else
+MODULE=rfm2g.ko
+MOD_DIR=/lib/modules/`uname -r`/extra
+fi
+
+DEVICE=rfm2g
+MODE="666"
+
+echo  "Loading Module rfm2g."
+echo  "========================================================="
+echo  "COPYRIGHT NOTICE"
+echo  "Copyright (C) 2002, 2004, 2008 GE Intelligent Platforms, Inc."
+echo  "International Copyright Secured.  All Rights Reserved."
+echo  " "
+
+# Install the module
+/sbin/insmod -f ${MOD_DIR}/${MODULE} $* || exit 1
+echo "Module "${DEVICE}" has been installed."
+# Remove stale character device nodes
+rm -f /dev/${DEVICE}[0-4]
+echo "Stale device nodes /dev/"${DEVICE}"[0-4] have been removed."
+
+# Determine the major device number
+major=`cat /proc/devices | awk "\\$2==\"$DEVICE\" {print \\$1}"`
+echo "New major device number is "${major}"."
+
+# Determine how many RFM devices are present
+count=`cat /proc/rfm2g | grep RFM2G_DEVICE_COUNT | awk '{print $2}'`
+
+# Create new character device nodes
+minor=0
+while [ $minor -lt $count ] 
+do
+    mknod /dev/${DEVICE}${minor} c ${major} ${minor}
+    echo "New device node /dev/"${DEVICE}${minor}" has been created."
+    minor=`expr $minor + 1`
+done
+
+# Set permissions
+chmod ${MODE} /dev/${DEVICE}[0-4]
+
+echo
+
+exit 0
+

@@ -1,0 +1,1236 @@
+SFT-RFM2G-LNX Driver for the 2 GigaBaud Reflective Memory Interfaces
+on the Linux Operating System Users Guide
+
+COPYRIGHT AND TRADEMARKS
+GE Intelligent Platforms, Inc.
+All Rights Reserved
+This document shall not be duplicated, nor its contents used for any
+purpose, unless granted express written permission from GE Intelligent Platforms,
+Inc. (c) Copyright 2008. 
+
+12090 South Memorial Parkway
+Huntsville, Alabama 35803-3308, USA
+(256) 880-0444 (800) 322-3616 Fax: (256) 882-0859
+
+
+Manual Revision and Modification Date
+$Revision: 20 $
+$Modtime: 9/03/10 2:21p $
+
+
+Overview
+Contents
+SFT-RFM2G-LNX Driver Overview
+Intended Audience 
+SFT-RFM2G-LNX Drivers and Supported Boards 
+Accessing Additional Information 
+GE Intelligent Platforms Technical Support 
+
+Introduction
+
+This manual provides information that allows you to install and run the
+SFT-RFM2G-LNX (RFM 2 GigaBaud) driver for the Linux platform, which
+enables you to access the features of a variety of PCI and PMC RFM2g
+hardware.
+Multiple RFM2g devices can be installed in the same system.
+
+
+SFT-RFM2G-LNX Driver Overview
+The RFM2g driver provides all of the necessary files, scripts and programs for
+you to install, test and use any of the supported Reflective Memory (RFM) 
+Interface cards in your system.
+
+The RFM2g driver provides the following features:
+Device Driver I/O Control Commands - The RFM2g driver provides I/O
+commands that can be used to exchange data with the RFM2g devices on your
+host computer. See Appendix A, "I/O Control Commands" for information on
+the I/O supported commands.
+
+Application Program Interface (API) Library - Application programs may use 
+the services provided by the RFM2g Application Program Interface (API) library
+to access the features of the RFM2g devices in a portable way. Using the API
+library makes it easy to use a different model of RFM interface, or to rehost
+your application program on a different supported host platform. See 
+"Application Program Interface (API) Library" on page 45 for more information.
+Command Line Interpreter - The rfm2g_util program is a command line 
+interpreter that enables a user to exercise various RFM2g API commands by 
+entering commands at the keyboard. To use rfm2g_util, change to the directory 
+containing the program and enter rfm2g_util Enter help or ? to display a list 
+of commands. See the Common RFM2g Application Program Interface (API) and 
+Command Line Interpreter for SFT/RFM2G Drivers Reference Manual for more 
+information.
+
+Intended Audience
+Knowledge of the Linux operating system is assumed.
+The RFM card should be installed in a PCI bus or PMC bus slot of the computer
+system, depending on your type of card.
+Software developers should be familiar with the following development 
+platforms:
+2.4.7-10 kernel or Red Hat 7.2 or higher and Linux 2.6 kernels for the
+SFT-RFM2G-LNX driver
+The driver is modified to work on a Fedora 8 X86 32/64 bit kernels.
+
+C programming for all versions of the RFM2g driver
+
+
+SFT-RFM2G-LNX Drivers and Supported Boards
+SFT-RFM2G-LNX driver software is delivered on a platform-specific CD.
+
+Supported Boards
+The SFT-RFM2G-LNX driver supports the following PCI and PMC boards:
+Board Description
+PCI-5565 PCI bus 2 GigaBaud Reflective Memory
+PMC-5565 PMC bus 2 GigaBaud Reflective Memory
+PCI-5565PIORC bus 2 GigaBaud Reflective Memory		
+PMC-5565PIORC bus 2 GigaBaud Reflective Memory
+PCIE-5565 PCIe bus 2 GigaBaud Reflective Memory
+
+Accessing Additional Information
+GE Intelligent Platforms Documentation
+The following files are distributed with the SFT-RFM2G-LNX driver 
+software:
+
+Directory / File    Description
+
+install.txt         Instructions for installing the product
+Makefile            Builds the driver
+manual.txt          SFT-RFM2G-LNX Drivers for the 2 GigaBaud 
+                    Reflective Memory Interfaces User's Guide
+readme.txt          Instructions for building the driver
+release.txt         Release notes
+rfm2g_common.pdf    RFM2g API and Command line Interpreter documentation
+rfm2g_init          Installation script for installing product
+rfm2g_load          Script used to launch the driver
+rfm2g_unload        Script used to unload the driver
+version             Contains product version information
+
+api                 Directory
+close.c             Code that implements the RFM2gClose() function
+config.c            Code that implements configuration API functions
+event.c             Code that implements event-related API functions
+Makefile            Builds the librfm2g.a library
+Makefile_PPC        Builds the kernel driver for PPC
+open.c              Code that implements the RFM2gOpen() function
+rfm2g_errno.c       RFM2g API Error code strings
+transfer.c          Code that implements memory access API functions
+util.c              Code that implements utility API functions
+
+diags               Directory
+Makefile            Builds the Command Line Interpreter application
+Makefile_PPC        Builds the Command Line Interpreter application for PPC
+rfm2g_util.c        Code for the Command Line Interpreter application
+rfm2g_utilosspec.c	Linux specfic commands for the Command Line Interpreter 
+                    application
+
+driver              Directory
+device_init.c       Code to initialize an RFM2g board
+device_probe.c      Code to find RFM2g boards
+driver_entry.c      Code for driver entry point functions.
+driver_init.c       Code to register and initialize the device driver
+fixupflags.sh       Enables successful build of the device driver on Red Hat 9 
+interrupts.c        Code to implement interrupt functionality
+Makefile            Builds the driver for 2.6 kernels
+Makefile2.4         Builds driver for the 2.4 kernels
+Makefile_PPC        Builds driver for the 2.4 kernels for PPC
+proc_page.c         Code to generate the /proc/rfm2g file
+rfm2g_driver.h      RFM2g header file that includes other header files.
+
+include             Directory
+rfm2g_api.h         RFM2g API header file
+rfm2g_defs.h        RFM2g API common definitions header file
+rfm2g_defs_linux.h  RFM2g definitions specific to the Linux driver
+rfm2g_errno.h       RFM2g API error code definitions header file
+rfm2g_ioctl.h       Definitions used for IOCTL commands sent to the driver
+rfm2g_kinc.h        Additional include files used by 2.6 kernels
+rfm2g_osspec.h      RFM2g API header file with OS Specific definitions
+rfm2g_regs.h        Definitions of RFM2g board control registers
+rfm2g_struct.h      Structures used within the driver
+rfm2g_types.h       RFM2g type definitions
+rfm2g_version.h     Product version information
+
+samples             Directory
+Makefile_m          Builds the rfm2g_map sample
+Makefile_m_PPC      Builds the rfm2g_map sample for PPC
+Makefile_r          Builds the rfm2g_receiver sample
+Makefile_r_PPC      Builds the rfm2g_receiver sample for PPC
+Makefile_s          Builds the rfm2g_sender sample
+Makefile_s_PPC	    Builds the rfm2g_sender sample for PPC
+readme.txt          Description of the samples
+rfm2g_map.c         Code for the rfm2g_map sample
+rfm2g_receiver.c    Code for the rfm2g_receiver sample
+rfm2g_sender.c      Code for the rfm2g_sender sample
+
+Accessing Additional Information
+
+The following is a list of reference documentation related to this driver:
+
+Common RFM2g Application Program Interface (API) and Command Line Interpreter 
+for SFT/RFM2G Drivers Reference Manual (523-000447-000)
+
+PCI-5565 Ultra High-Speed Fiber-Optic Reflective Memory with Interrupts 
+Product Manual (500-855565-000)
+
+PMC-5565 Ultra High-Speed Fiber-Optic Reflective Memory with Interrupts 
+Product Manual (500-755565-000)
+
+Please call your GE Intelligent Platforms sales representative for more
+information.
+
+Linux documentation is available from Red Hat, Inc. via the World Wide Web. 
+For a current list of downloadable documentation, go to:
+www.redhat.com/linux_docs.html
+
+
+
+GE Intelligent Platforms Technical Support
+You may contact GE Intelligent Platforms' customer service at:
+TELEPHONE: 1-800-269-4714
+256-880-0444 (outside of U.S.)
+FAX: 256-650-7245
+E-MAIL: support.embeddedsystems@gefanuc.com
+
+Service is free for 30 days after product delivery. After this time however, 
+you must purchase GE Intelligent Platforms' Maintenance Agreement for 
+continued support. For more information, refer to the Maintenance Agreement 
+documentation that was delivered with the product.
+
+With your correspondence, please provide the following:
+    Product number and version, found by reading the version.h file
+    Type of target hardware, processor and board
+    Exact wording of any messages on your screen
+    What you were doing when the error occurred
+    What steps you have taken (if any) to resolve the problem
+In addition, when e-mailing, please include the following:
+    Your name
+    Your company's name
+    Your phone and fax numbers
+    Your E-mail address
+
+
+The SFT-RFM2G-LNX Linux Driver
+
+Introduction
+This chapter provides procedures for installing and uninstalling the
+SFT-RFM2G-LNX driver.
+NOTE: Root privileges are required to complete many of the installation 
+procedures.
+
+
+System Requirements
+To install and run the SFT-RFM2G-LNX driver, you must have the 
+following:
+
+Hardware
+One of the following boards:
+PCI-5565
+PMC-5565
+PCI-5565PIORC 
+PMC-5565PIORC 
+PCIE-5565
+
+Software
+2.4.7-10 Linux kernel or higher (Red Hat 7.2 or higher)
+2.6 Linux kernel
+Fedora 8 X86 32/64 Linux distribution
+
+Additionally, software developers should have a basic understanding of C
+programming and experience in the Linux environment.
+
+Pre-Installation Instructions
+Prior to installing the driver, perform the following steps:
+1. Remove power from the computer.
+2. Insert the RFM board.
+3. Boot up in the Linux operating system.
+
+
+Installing the Driver
+Installation of the SFT-RFM2G-LNX driver is comprised of the following
+steps:
+Moving the driver source files from the transport media
+Building, installing and loading the driver
+
+Configuration for DMA Use
+
+WARNING: If a DMA buffer is reserved by using the "mem=" boot line parameter 
+in Linux Red Hat 7.3, the amount of memory reserved may not be as large as in 
+earlier versions of Linux. To ensure all memory is available for mapping, 
+examine the following line of the /proc/iomem file:
+
+00100000-[address]: SYSTEM RAM
+
+where [address] is the highest address used by Linux. If [address]overlaps the
+value you plan to map, the "mem=" value must be lowered until the value in the
+iomem file is lower than your desired starting address. For example, if Linux 
+is booted using "mem=127M", the first address that could be used for a DMA 
+buffer would be 0x07f00000. The value in the iomem file could read:
+
+00100000-07F607FF: SYSTEM RAM
+
+This overlaps the desired buffer area by 0x00607FF bytes. If the mem value is 
+then changed to "mem=126M" and Linux is booted again, the iomem file will 
+then contain the following line:
+
+00100000-07E607FF: SYSTEM RAM
+
+which does not overlap your desired area.
+
+NOTES:
+These procedures need to be followed for each handle obtained by a call to
+RFM2gOpen() or the system open() function for the RFM2g device. Each handle 
+can have a different Threshold and DMA buffer region.
+
+This example assumes the PC has 128 Mbytes of RAM installed and that the 
+top 1 Mbyte will be reserved and used for DMA buffer space.
+
+
+Installing the Driver 
+Reserving DMA Buffer Area
+Before DMA transfers can be used by the RFM2g device driver, a buffer area 
+for DMA must be reserved. The local buffer area reserved for use by DMA must 
+be contiguous and can be set aside at boot time by using the Linux boot mem 
+command line parameter.
+For example, to set aside the top 1 Mbyte of physical memory on a 128 Mbyte 
+CPU, add the following to the kernel boot command line:
+
+mem=127M
+
+See Red Hat Linux documentation for procedures on modifying the LILO or GRUB
+boot loader parameters.
+The size of the set-aside area and division of the buffer area, if required, 
+must be user-determined.
+
+Mapping the DMA buffer
+Use the RFM2g system function RFM2gUserMemory() to map the DMA buffer to a 
+user-defined virtual address. For example:
+
+RFM2G_STATUS status;
+volatile RFM2G_UINT32 *pDmaMemory;
+RFM2G_UINT64 DmaBaseAddr;
+RFM2G_UINT32 DmaBuffSize;
+DmaBaseAddr = 0x07F00000; /* 127MB base addresss */
+DmaBuffSize = 0x00100000; /* 1MB buffer size */
+/* Tell Map function that this is DMA memory */
+DmaBaseAddr |= RFM2G_DMA_MMAP_OFFSET;
+status = RFM2gUserMemory(handle, &pDmaMemory, 
+    (volatile void **)DmaBaseAddr,(DmaBuffSize/PAGE_SIZE));
+
+The pDmaMemory variable now points to the beginning of the DMA buffer area. 
+All DMA reads and writes associated with the current handle will use this as 
+the area where data will be copied to or from the RFM card for DMA based 
+transfers.
+
+
+Setting the DMA Threshold
+The DMA threshold enables the driver to determine whether a DMA transfer should
+be used instead of a standard IO transfer.
+The default DMA threshold is 0xFFFFFFFF. Since no transfer can be this large 
+(i.e. no RFM card contains this much RAM), no DMAs will be used until this 
+value is set to a lower value. Read and write functions will use DMA if the 
+requested transfer size (in bytes) is greater than or equal to the DMA 
+Threshold.  Use the RFM2gSetDmaThreshold() function to set the DMA threshold. 
+For example:
+
+RFM2G_STATUS status;
+RFM2G_UINT32 Threshold;
+Threshold = 0x00000100; /* 256 Bytes */
+status = RFM2gSetDMAThreshold( handle, Threshold);
+
+In the above example, all reads or writes greater than or equal to a size of 
+256 bytes will use DMA and the DMA buffer for transfers.
+
+Starting a DMA transfer
+To perform a DMA write transfer, you must first place the desired data at the 
+area pointed to by the pDmaMemory variable initialized in the above step, 
+"Setting the DMA Threshold". After the data is transferred to the DMA buffer 
+area, a write function can be called to initiate the transfer. For example:
+
+RFM2G_STATUS status;
+RFM2G_UINT32 Threshold;
+volatile RFM2G_UINT32 *pCurOffset;
+RFM2G_UINT32 Offset;
+RFM2G_UINT32 Length;
+Offset = 0; /* Where on the RFM card to start writing data */
+Length = 0x1000 * sizeof(RFM2G_UINT32); /* How many bytes to transfer */
+pCurOffset = pDmaMemory;
+/* Fill DMA buffer with a ramp */
+for (i = 0; i < 0x1000, i++)
+{
+    pCurOffset = i;
+    pCurOffset++;
+}
+/* send the data */
+status = RFM2gWrite( handle, Offset, pDmaMemory, Length);
+
+Installing the Driver 
+Moving the Driver Source Files from the Transport Media
+The SFT-RFM2G-LNX driver software is delivered on CD. Begin the
+installation by copying the rfm2g.tgz file to your computer. The rfm2g.tgz 
+file is a compressed tar archive file that contains all files needed to 
+install the driver on your computer.
+
+Perform the following to copy and uncompress the driver files:
+
+1. Copy the rfm2g.tgz file to the appropriate directory on your computer.
+2. Change directories (cd) to the directory containing the rfm2g.tgz file.
+3. Enter the following from the command prompt to uncompress the files in 
+   the tar
+
+archive:
+
+tar -xvozf rfm2g.tgz
+
+For X86 Installable driver follow the following instructions, for PPC kernel driver, 
+please skip on to PPC Kernel Driver install.
+
+Building, Installing and Loading the Linux RFM2g Driver on X86 platform
+To create and install the RFM2g module, run the make utility with a command 
+line parameter (i.e., make install), which does the following:
+
+Creates the rfm2g.o or rfm2g.ko driver in the RFM2g/driver subdirectory.
+Creates the librfm2g.a library in the RFM2g/api subdirectory.
+Creates the diag program in the RFM2g/diags subdirectory.
+Creates the /usr/lib/rfm2g directory and places the following files within it:
+- Copies of all header (.h) files
+- A copy of the librfm2g.a file
+Creates the /lib/module/kernel/version/rfm2g directory and places a copy of
+the rfm2g.o driver in it.
+Copies the rfm2g_init, rfm2g_load, rfm2g_unload script files to the
+/etc/rc.d/init.d directory. The link S50rfm2g is then created in the
+/etc/rc.d/rc3.d and rc5.d directories, which enables the module to autostart
+each time Linux is booted in multiuser mode.
+The makefile for each is already defined in the respective directories.
+To build and install the driver:
+1. Log in as superuser (#).
+2. Change directories to the RFM2g directory.
+3. To build the driver, API library and diag program, enter:
+
+make install
+
+
+Removing the Driver
+To remove the RFM2g driver and all of its associated files and subdirectories,
+perform the following:
+1. Log in as superuser (#).
+2. Change directories to the RFM2g directory.
+3. Enter:
+
+make uninstall
+
+to remove everything except the original source code.
+
+
+Building, Installing and Loading the Linux RFM2g Driver on supported PPC 
+platform
+
+
+PPC Kernel Driver install
+
+ 
+Copy the driver files from the installation directory to the BSP directory.
+Copy header files from the installation directory to the BSP directory.
+ 
+The following directory names are based on the CPCI-7057 Linux BSP.  Please 
+change as necessary for your BSP installation.  Variables may be replaced as
+required for the environment.
+ 
+RFM_PATH=/home/rfm2g
+LSP_PATH=/home/linux-7057/sft-7436_R01_12
+ 
+> cp $RFM_PATH/driver/* $LSP_PATH/drivers/char/rfm2g
+> cp $RFM_PATH/include/* $LSP_PATH/include/net/rfm2g
+> cd $LSP_PATH/drivers/char/rfm2g
+> cp Makefile_PPC Makefile
+ 
+
+Update the BSP Makefile to Make the rfm2g driver.
+* Modifications may already exist on some BSPs.  If one runs 'make xconfig' 
+prior to making this modification, and notices that an RFM item already 
+exists in the character devices area, then this modification probably 
+exists already.
+ 
+> cd /home/vmisft-7436_R01_07/LSP_7436/drivers/char
+> vi Makefile
+
+ subdir-$(CONFIG_RFM2G) += rfm2g
+ ifeq ($(CONFIG_RFM2G),y)
+   obj-y += rfm2g/rfm2gdrv.o
+ endif
+
+Save and Exit
+ 
+Edit configuration file   
+* Modifications may already exist on some BSPs.  If one runs 'make xconfig' 
+prior to making this modification, and notices that an RFM item already 
+exists in the character devices area, then this modification probably 
+exists already.
+ 
+> vi drivers/char/Config.in
+
+Find line: tristate (/Standard.generic)   
+> 'Standard/generic (8250/16550 and compatible UARTs) serial support'
+
+Add line BEFORE (O)                        
+> tristate 'RFM driver support' CONFIG_RFM2G
+
+Save and Exit
+ 
+Follow instructions to build the Kernel.
+ 
+Example:
+
+> cd LSP_7436
+> make distclean
+> make db644xx_config
+> make xconfig
+ 
+In xconfig, Configure settings to add rfm2g.
+
+Follow the directions in your BSP documentation to build and export the kernel.
+The following is an example if you boot from tftp for the CPCI-7055
+
+>make dep
+>make uImage
+Copy the kernel to the tftp export directory.
+>cp arch/ppc/boot/images/uImage /tftpboot
+
+Change to the api directory under the rfm2g directory where
+you extracted the driver.
+
+>cd /home/rfm2g/api
+
+Create lib directory to store the RFM2g API library in
+
+>mkdir ../lib
+
+Edit Makefile_PPC with your kernel directory.  Please review the Makefile_PPC 
+to verify other paths as necessary for your build environment.
+
+KER_ROOT          = /home/vmisft-7436_R01_07/LSP_7436/
+
+
+Build the RFM2g API.
+
+>make -f Makefile_PPC
+
+Build the rfm2g_util application.  
+
+>cd /home/rfm2g/diags
+
+Edit Makefile_PPC with your kernel directory.  Please review the Makefile_PPC 
+to verify other paths as necessary for your build environment.
+
+KER_ROOT          = /home/vmisft-7436_R01_07/LSP_7436/
+
+
+>make -f Makefile_PPC
+
+copy the rfm2g_util application to where you normally put user applications
+For example:
+
+>cp rfm2g_util /mnt/redhaggis/usr/bin
+
+Components
+The SFT-RFM2G-LNX Linux device driver contains the following components:
+
+1. Installable Device Driver (rfm2g.o)
+The device driver may be installed into a running system without rebooting or
+otherwise interfering with any executing programs.
+An application program gains access to the underlying RFM2g hardware by
+opening a file created by the driver named similar to /dev/rfm2g0 (for the 
+first RFM2g device in the system).
+When this file is opened, the application program may then use a driver mmap()
+request to map the RFM2g device's local memory into its virtual address space
+where ordinary array access techniques may be used.
+Alternatively, the application may issue other I/O control requests to access 
+the Reflective Memory on an 8-bit byte, 16-bit word, or 32-bit longword basis.
+The driver provides up to three types of RFM2g interrupt events for use by the
+application program. An application may send an RFM2g interrupt event to any
+other individual RFM2g node or may broadcast the RFM2g interrupt event to all
+other RFM2g nodes. The application may also wait to receive the next RFM2g
+interrupt event transmitted by another RFM2g node.
+The driver may be safely used in a multiprocessor system. It is threadsafe, so
+multiple application threads may access it.
+
+2. C-Language Driver Header File (rfm2g_api.h)
+The application program interface to the services provided by the driver are
+defined in the /user/lib/rfm2g/rfm2g_api.h header file. Use this header file 
+to provide simple function calls to control and access the board. This file 
+is suitable for inclusion in either a standard C or C++ compilation. Use the
+/user/lib/rfm2g/librfm2g.a file to link applications.
+
+3. Sample Application (rfm2g_sender.c, rfm2g_receiver.c, and rfm2g_map.c)
+The SFT-RFM2G-LNX Linux device driver contains three sample
+programs that provide examples on how to use the driver and API with your
+application.
+
+rfm2g_sender.c - Running on computer 1, this program writes a small buffer
+of data to Reflective Memory; sends an interrupt event to computer number 2;
+waits to receive an interrupt event from computer number 2; reads a buffer of
+data (written by computer number 2) from a different Reflective Memory
+location; and closes the RFM2g driver.
+
+rfm2g_receiver.c - Running on computer 2, this program opens the RFM2g
+driver; waits to receive an interrupt event from computer number 1; reads the
+buffer of data (written by computer number 1) from Reflective Memory; writes
+the buffer of data to a different Reflective Memory location; sends an 
+interrupt event to computer number 1; and closes the RFM2g driver.
+
+
+These two programs are intended to work together to demonstrate basic data 
+transfer and interrupt handshaking. To use the programs together, it is 
+assumed that:
+- Two computers are present
+- Each computer contains a Reflective Memory card
+- The Reflective Memory cards in the computers are connected to each other
+- Each computer has the RFM2g device driver installed
+rfm2g_map.c - Demonstrates usage of the mmap() function, which enables
+you to obtain a pointer for directly accessing the memory of the RFM2g device.
+
+4. API Command Line Application (rfm2g_util)
+The RFM2g/diags folder contains the rfm2g_util program, which is a command 
+line application that enables you to exercise all of the driver's API 
+functions.  Once you have built and started the diag program, enter help 
+at the prompt to obtain a list of commands that can be run using rfm2g_util. 
+To obtain detailed help for a specific command, enter help <command>, 
+where <command> is any of the commands listed by the help command.
+The code in the rfm2g_util.c file can be used as an example of how to use 
+each API command by examining the function do <command>(), where <command> 
+is any of the commands listed by the help command.
+
+Building the Sample Applications
+To build the sample application:
+1. Open a console window.
+2. Log in as superuser (#).
+3. Build the rfm2g_sender by entering:
+make -f makefile_s
+4. Build the rfm2g_receiver by entering:
+make -f makefile_r
+5. Build the rfm2g_map by entering:
+make -f makefile_m
+
+
+Appendix
+I/O Control Commands
+
+Introduction
+This appendix describes the I/O control commands available for use with the
+SFT-RFM2G-LNX device driver.  Using IOCTL's in your application program
+will make your program specific to the Linux driver and will not compile
+on other Operating Systems with other RFM2g drivers.  If you want you code
+to work on all OS's supported by RFM2g drivers, please use RFM2g API calls in 
+your application.
+
+
+I/O Control Commands
+The following I/O control commands are only available for use with the
+SFT-RFM2G-LNX device driver:
+
+I/O Control Command              Description
+IOCTL_RFM2G_ATOMIC_PEEK          Reads a single byte, word, or longword from 
+                                 Reflective Memory.
+IOCTL_RFM2G_ATOMIC_POKE          Writes a single byte, word, or longword to
+                                 Reflective Memory.
+IOCTL_RFM2G_CANCEL_EVENT         Cancels the block of a called thread.
+IOCTL_RFM2G_CHECK_RING_CONT      Checks fibre ring continuity.
+IOCTL_RFM2G_CLEAR_EVENT          Clears out the event on the device.
+IOCTL_RFM2G_CLEAR_EVENT_COUNT    Clears the event count for the given event
+IOCTL_RFM2G_CLEAR_EVENT_STATS    Clears event queue statistics information.
+IOCTL_RFM2G_CLEAR_OWN_DATA       Clears the own data LED and returns the 
+                                 state of the LED prior to clearing it.
+IOCTL_RFM2G_DISABLE_EVENT        Disables a requested event.
+IOCTL_RFM2G_ENABLE_EVENT         Enables a requested event.
+IOCTL_RFM2G_FLUSH_QUEUE          Empties events from a specified queue. 
+IOCTL_RFM2G_GET_CONFIG           Returns board configuration information
+IOCTL_RFM2G_GET_DARK_ON_DARK     Returns the value of the board's Dark on 
+                                 Dark feature.
+IOCTL_RFM2G_GET_DEBUG_FLAGS      Obtains driver debug message flags.
+IOCTL_RFM2G_GET_DMA_BYTESWAP     Returns the value of the board's DMA 
+                                 byteswap setting.
+IOCTL_RFM2G_GET_DMA_THRESHOLD    Obtains the current DMA threshold.
+IOCTL_RFM2G_GET_EVENT_STATS      Returns an event queue's statistical 
+                                 information.
+IOCTL_RFM2G_GET_LED              Returns the value of the board's STATUS LED.
+IOCTL_RFM2G_GET_LOOPBACK         Returns the state of the board's loopback 
+                                 setting.
+IOCTL_RFM2G_GET_MEMORY_OFFSET    Returns the memory offset the board is 
+                                 set to.
+IOCTL_RFM2G_GET_PARITY_ENABLE    Returns the state of the board's parity 
+                                 checking feature.
+IOCTL_RFM2G_GET_PIO_BYTESWAP     Returns the value of the board's PIO 
+                                 byteswap setting.
+IOCTL_RFM2G_GET_TRANSMIT_DISABLE Returns the state of the board's transmitter.
+IOCTL_RFM2G_READ                 Read data from Reflective Memory.
+IOCTL_RFM2G_READ_REG             Read a single byte, word, or longword from 
+                                 a register window.
+IOCTL_RFM2G_SEND_EVENT           Sends an interrupt event to another node 
+                                 on a ring.
+IOCTL_RFM2G_SET_DARK_ON_DARK     Sets the value of the board's Dark on Dark 
+                                 feature.
+IOCTL_RFM2G_SET_DEBUG_FLAGS      Sets or clears specified debug flags.
+IOCTL_RFM2G_SET_DMA_BYTE_SWAP    Sets the value of the board's DMA byteswap.
+IOCTL_RFM2G_SET_DMA_THRESHOLD    Sets the DMA threshold value.
+IOCTL_RFM2G_SET_LED              Sets the value of the board's STATUS LED.
+IOCTL_RFM2G_SET_LOOPBACK         Sets the state of the board's loopback.
+IOCTL_RFM2G_SET_MEMORY_OFFSET    Sets the board's memory offset.
+IOCTL_RFM2G_SET_PARITY_ENABLE    Sets the state of the board's parity 
+                                 checking feature.
+IOCTL_RFM2G_SET_PIO_BYTE_SWAP    Sets the value of the board's PIO byteswap.
+IOCTL_RFM2G_SET_TRANSMIT_DISABLE Sets the state of the board's transmitter.
+IOCTL_RFM2G_WAIT_FOR_EVENT       The thread will block, waiting for either 
+                                 the specified event or a timeout.
+IOCTL_RFM2G_WRITE                Write data to Reflective Memory.
+IOCTL_RFM2G_WRITE_REG            Write a single byte, word, or longword to a
+                                 register window.                                
+
+
+I/O Control Commands 
+
+IOCTL_RFM2G_ATOMIC_PEEK
+
+The IOCTL_RFM2G_ATOMIC_PEEK command reads a single byte, word, or longword
+from Reflective Memory.
+
+Input Arguments
+The input argument must be the RFM2GATOMIC structure filled in as shown:
+
+Name        Type            Description
+data        RFM2G_UINT64    Value written to RFM.
+offset      RFM2G_UINT32    Offset into Reflective Memory.
+width       RFM2G_UINT8     Indicates access, which is one of the following:
+                            Value   Description 
+                            1       8-bit byte 
+                            2       16-bit word
+                            4       32-bit longword
+
+Output Arguments
+Upon completion, the "data" member of the RFM2GATOMIC argument will contain
+the requested value.
+
+
+IOCTL_RFM2G_ATOMIC_POKE
+
+The IOCTL_RFM2G_ATOMIC_POKE command writes a single byte, word, or longword to
+Reflective Memory.
+
+Input Arguments
+The input argument must be the RFM2GATOMIC structure filled in as shown:
+Name        Type            Description
+data        RFM2G_UINT64    Value written to RFM.
+offset      RFM2G_UINT32    Offset into Reflective Memory.
+width       RFM2G_UINT8     Indicates access, which is one of the following:
+                            Value   Description 
+                            1       8-bit byte 
+                            2       16-bit word
+                            4       32-bit longword
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_CANCEL_EVENT
+
+Cancels the block of another thread that has previously called
+IOCTL_RFM2G_WAIT_FOR_EVENT.
+
+Input Arguments
+The input argument must be the RFM2GEVENTINFO structure as shown:
+Name            Type            Description
+ExtendedInfo    RFM2G_UINT32    Not used.
+Event           RFM2GEVENTTYPE  The RFM2GEVENTTYPE involved
+Timeout         UINT32          Not used.
+NodeId          RFM2G_NODE      Not used.
+pDrvSpec        void *          Not used.
+
+Only the Event element of the structure needs to be filled in with a valid 
+value from the RFM2GEVENTTYPE enumeration.
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_CHECK_RING_CONT
+
+Checks the continuity of the fibre ring by clearing OWN DATA BIT and 
+initiating a packet around the ring. If OWN DATA BIT is set within a 
+specific time period, this function call returns a normal status. If a 
+timeout occurs, the ring is considered broken and a nonzero (0) status 
+is returned. There are no parameters used for this IOCTL.
+
+Input Arguments
+No input arguments are required by this command.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_CLEAR_EVENT
+
+Clears the event on the device and in the S/W queue.
+
+Input Arguments
+The input argument must be a valid value from the RFM2GEVENTTYPE enumeration. 
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_CLEAR_EVENT_COUNT       
+
+Clears the event count for the given event.
+
+Input Arguments
+The input argument must be a valid value from the RFM2GEVENTTYPE enumeration. 
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_CLEAR_EVENT_STATS
+
+Clears the statistics information for a specified event queue.
+
+Input Arguments
+The input argument must be a valid value from the RFM2GEVENTTYPE enumeration. 
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_CLEAR_OWN_DATA          
+
+Clears the own data LED and returns the state of the LED prior to clearing it.
+
+Input Arguments
+No input arguments are required by this command.
+
+Output Arguments
+RFM2G_BOOL value containing the state of the own data LED.
+
+
+IOCTL_RFM2G_DISABLE_EVENT
+
+Disables a specified Event element.  Interrupts from the specified event will
+no longer be processed or sent to waiting threads.
+
+Input Arguments
+The input argument must be the RFM2GEVENTINFO structure as shown:
+Name            Type            Description
+ExtendedInfo    RFM2G_UINT32    Not used.
+Event           RFM2GEVENTTYPE  The RFM2GEVENTTYPE involved
+Timeout         UINT32          Not used.
+NodeId          RFM2G_NODE      Not used.
+pDrvSpec        void *          Not used.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_ENABLE_EVENT
+
+Enables a specified Event. Interrupts from the specified event will be 
+processed or sent to waiting threads. If no thread is currently waiting 
+for the specified event, it will remain queued until a call for the 
+interrupt is made.
+
+Input Arguments
+The input argument must be the RFM2GEVENTINFO structure as shown:
+Name            Type            Description
+ExtendedInfo    RFM2G_UINT32    Not used.
+Event           RFM2GEVENTTYPE  The RFM2GEVENTTYPE involved
+Timeout         UINT32          Not used.
+NodeId          RFM2G_NODE      Not used.
+pDrvSpec        void *          Not used.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_FLUSH_QUEUE
+
+Empties queued events from a specified queue.
+
+Input Arguments
+The input argument must be the RFM2GEVENTINFO structure as shown:
+Name            Type            Description
+ExtendedInfo    RFM2G_UINT32    Not used.
+Event           RFM2GEVENTTYPE  The RFM2GEVENTTYPE involved
+Timeout         UINT32          Not used.
+NodeId          RFM2G_NODE      Not used.
+pDrvSpec        void *          Not used.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_GET_CONFIG
+
+Returns the board configuration information. The contents of that structure 
+will be filled in by this call.
+
+Input Arguments
+The input argument must be a pointer to a RFM2GCONFIG structure:
+
+Name                Type          Description
+NodeId              RFM2G_NODE    Node ID of board 
+BoardId             RFM2G_UINT8   Board Type ID 
+Unit                RFM2G_UINT8   Device unit number
+PlxRevision         RFM2G_UINT8   Revision of PLX chip
+MemorySize          RFM2G_UINT32  Total Board Memory
+Device[128]         char          Name of device file
+Name[32]            char          Product ordering option "VMISFT-RFM2G-ABC-DEF"
+DriverVersion[16]   char          Release level of driver
+BoardRevision       RFM2G_UINT8   Revision of RFM board
+RevisionId          RFM2G_UINT8   PCI Revision ID
+Lcsr1               RFM2G_UINT32  Copy of Local Control Status Reg 
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_GET_DARK_ON_DARK        
+
+Returns the value of the board's Dark on Dark feature.
+
+Input Arguments
+No input arguments are required by this command.
+
+Output Arguments
+RFM2G_BOOL value containing the state of the Dark on Dark feature.
+
+
+IOCTL_RFM2G_GET_DEBUG_FLAGS
+
+NOTE: Application programs should not use this command unless directed to do 
+so by GE Intelligent Platforms support personnel.
+Obtains a copy of the driver's debug message flags and returns a 32-bit map of
+which flags are set. An application program can use this command to display or
+obtain a current copy of the set flags in order to determine which ones can be
+altered.
+
+Input Arguments
+No input arguments are required by this command.
+
+Output Arguments
+32-bit value containing debug flags.
+
+
+IOCTL_RFM2G_GET_DMA_BYTESWAP        
+
+Returns the value of the board's DMA byteswap setting.
+
+Input Arguments
+No input arguments are required by this command.
+
+Output Arguments
+RFM2G_BOOL value containing the state of the DMA byteswap setting.
+
+
+IOCTL_RFM2G_GET_DMA_THRESHOLD
+
+Obtains the current DMA threshold. An application program can use this command
+to return the DMA threshold as a 32-bit parameter. Read or write function 
+calls that transfer either this DMA threshold size or a larger number of bytes 
+will use DMA for the transfer.
+
+Input Arguments
+No input arguments are required by this command.
+
+Output Arguments
+32-bit value containing the DMA threshold.
+
+
+IOCTL_RFM2G_GET_EVENT_STATS
+
+Returns statistical information from an event queue. The RFM2GQINFO argument
+indicates which event queue to obtain data from and will be filled in by the 
+driver by this call.  
+
+Input Arguments
+The input argument must be a pointer to the RFM2GQINFO structure as shown:
+
+Name         Type          Description
+Event        RFM2G_UINT8   The queue to access. Use a RFM2GEVENTTYPE. 
+Overflowed   RFM2G_BOOL    If TRUE, the queue has overflowed.
+QueuePeak    RFM2G_UINT8   Maximum number of enqueued interrupts.
+reserved     RFM2G_UINT8   Not used.
+EventCount   RFM2G_UINT32  Number of events received.
+EventsQueued RFM2G_UINT32  Number of events in queue.
+QueueSize    RFM2G_UINT32  The size of the queue.
+MaxQueueSize RFM2G_UINT32  Maximum size of the queue.
+EventTimeout RFM2G_UINT32  The amount of time to wait for an interrupt.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_GET_LED
+
+Returns the current state of the Reflective Memory board's status LED. When 
+called, the parameter contains RFM2G_FALSE if the LED is disabled (off), or 
+RFM2G_TRUE if the LED is enabled (on).
+
+Input Arguments
+No input arguments are required by this command.
+
+Output Arguments
+RFM2G_BOOL value containing the state of the status LED.
+
+
+IOCTL_RFM2G_GET_LOOPBACK            
+
+Returns the state of the board's loopback setting.
+
+Input Arguments
+No input arguments are required by this command.
+
+Output Arguments
+RFM2G_BOOL value containing the state of the board's loopback setting.
+
+
+IOCTL_RFM2G_GET_MEMORY_OFFSET       
+
+Returns the memory offset the board is set to.
+
+Input Arguments
+A pointer to the RFM2G_MEM_OFFSETTYPE to store the result.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_GET_PARITY_ENABLE       
+
+Returns the state of the board's parity checking feature.
+
+Input Arguments
+A pointer to the RFM2G_UINT8 to store the result.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_GET_PIO_BYTESWAP        
+
+Returns the value of the board's PIO byteswap setting.
+
+Input Arguments
+A pointer to the RFM2G_UINT8 to store the result.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_GET_TRANSMIT_DISABLE    
+
+Returns the state of the board's transmitter.
+
+Input Arguments
+A pointer to the RFM2G_UINT8 to store the result.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_READ_REG                
+
+Read a single byte, word, or longword from a register window.
+
+Input Arguments
+A pointer to the RFM2GLINUXREGINFO to store the result.
+The input argument must be the RFM2GLINUXREGINFO structure as shown:
+Name            Type             Description
+regset          RFM2GREGSETTYPE  Register set to read from.
+Offset          RFM2G_UINT32     Offset into register set to read from.
+Width           RFM2G_UINT32     Data width of read.
+Value           RFM2G_UINT32     Value read.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SEND_EVENT
+
+Sends an interrupt event to another node on the ring.
+
+Input Arguments
+The RFM2GEVENTINFO structure address passed in as the parameter contains the
+specific event, the node to which to send the event and a 32-bit extended data
+value which the receiving node can use as a user-level message or command.
+The input argument must be the RFM2GEVENTINFO structure as shown:
+Name            Type            Description
+ExtendedInfo    RFM2G_UINT32    User data that accompanies an event.
+Event           RFM2GEVENTTYPE  The RFM2GEVENTTYPE involved, must be one
+                                of the following:
+                                RFM2GEVENT_RESET
+                                RFM2GEVENT_INTR1
+                                RFM2GEVENT_INTR2
+                                RFM2GEVENT_INTR3
+                                RFM2GEVENT_INTR4
+Timeout         UINT32          Not used.
+NodeId          RFM2G_NODE      RFM2g node to receive the event.  This value 
+                                should be one of the following:
+                                A valid node ID in the current ring
+                                RFM2G_NODE_ALL to broadcast the event to all 
+                                nodes in the ring
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_DARK_ON_DARK        
+
+Sets the value of the board's Dark on Dark feature.
+
+Input Arguments
+RFM2G_BOOL value containing the state of the dark on dark feature.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_DEBUG_FLAGS
+
+NOTE: Application programs should not use this command unless directed to do so
+by GE Intelligent Platforms support personnel.
+Sets or clears the specified debug flags. The map can be used by an application
+program to set debug message flags.
+All bits set to 0 will be disabled.
+Use IOCTL_RFM2G_GET_DEBUG_FLAGS to obtain the current value of all debug
+flags.
+
+Input Arguments
+A 32-bit value containing the flags to set (1) or cleared (0).
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_DMA_BYTE_SWAP       
+
+Sets the value of the board's DMA byteswap.
+
+Input Arguments
+RFM2G_BOOL value containing the state of the DMA byteswap.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_DMA_THRESHOLD
+
+Sets the value of the current DMA threshold for an application program. The 
+value to set is passed in the 32-bit parameter.
+Read or write function calls that transfer either this DMA threshold size or 
+a larger number of bytes will use DMA for the transfer. The default value is 
+0xFFFFFFFF, which disables the use of DMA for all transfers.
+
+Input Arguments
+32-bit DMA threshold.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_LED
+
+Sets the current state of the Reflective Memory board's status LED. If the 
+parameter contains RFM2G_FALSE, the LED is disabled (turned off). If the 
+parameter contains RFM2G_TRUE, the LED is enabled (turned on).
+
+Input Arguments
+RFM2G_BOOL value containing the state of the status LED.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_LOOPBACK            
+
+Sets the state of the board's loopback.
+
+Input Arguments
+RFM2G_BOOL value containing the state of the board's loopback.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_MEMORY_OFFSET       
+
+Sets the board's memory offset.
+
+Input Arguments
+RFM2G_MEM_OFFSETTYPE value containing the state of the board's memory offset.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_PARITY_ENABLE       
+
+Sets the state of the board's parity checking feature.
+
+Input Arguments
+RFM2G_BOOL value containing the state of the board's parity checking feature.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_PIO_BYTE_SWAP       
+
+Sets the value of the board's PIO byteswap.
+
+Input Arguments
+RFM2G_BOOL value containing the state of the board's PIO byteswap.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_SET_TRANSMIT_DISABLE    
+
+Sets the state of the board's transmitter.
+
+Input Arguments
+RFM2G_BOOL value containing the state of the board's transmitter.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_WAIT_FOR_EVENT
+
+Specifies the desired event and timeout. The parameter is a pointer to the
+RFM2GEVENTINFO structure and fills the structure elements with information 
+about the event when it arrives. The calling thread will perform a block 
+until either the requested event arrives or the timeout expires.
+
+Input Arguments
+The input argument must be the RFM2GEVENTINFO structure as shown:
+Name            Type            Description
+ExtendedInfo    RFM2G_UINT32    User data that accompanies an event.
+Event           RFM2GEVENTTYPE  The RFM2GEVENTTYPE involved
+Timeout         UINT32          Timeout period, in milliseconds.
+NodeId          RFM2G_NODE      RFM2g node which sent the event.
+pDrvSpec        void *          Not used.
+
+Output Arguments
+No output arguments are required by this command.
+
+
+IOCTL_RFM2G_WRITE_REG               
+
+Write a single byte, word, or longword to a register window.                                
+
+Input Arguments
+A pointer to the RFM2GLINUXREGINFO containing the information to write.
+The input argument must be the RFM2GLINUXREGINFO structure as shown:
+Name            Type             Description
+regset          RFM2GREGSETTYPE  Register set to write to.
+Offset          RFM2G_UINT32     Offset into register set to write to.
+Width           RFM2G_UINT32     Data width of write.
+Value           RFM2G_UINT32     Value to write.
+
+Output Arguments
+No output arguments are required by this command.
+

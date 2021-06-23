@@ -1,0 +1,27 @@
+# File: drivers/rfm/Makefile
+#
+# Makefile for the Linux rfm2g device driver.
+#
+# 2 Jan 2006, REM
+# 
+#
+
+EXTRA_CFLAGS += -DCFG_RFM_KERNEL_DRIVER
+
+obj-y		:=
+obj-n		:=
+obj-m		:=
+obj-		:=
+export-objs	:= device_init.o device_probe.o driver_entry.o driver_init.o interrupts.o proc_page.o
+
+obj-$(CONFIG_RFM2G) += device_init.o
+obj-$(CONFIG_RFM2G) += device_probe.o
+obj-$(CONFIG_RFM2G) += driver_entry.o
+obj-$(CONFIG_RFM2G) += driver_init.o
+obj-$(CONFIG_RFM2G) += interrupts.o
+obj-$(CONFIG_RFM2G) += proc_page.o
+
+O_TARGET := rfm2gdrv.o
+
+
+include $(TOPDIR)/Rules.make
