@@ -1,0 +1,71 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides: 				rfm2g_init
+# Required-Start:
+# Required-Stop:
+# Default-Start: 			2 3 4 5
+# Default-Stop: 			0 1 6
+# Short-Description: 		rfm2g driver
+# Description: 			rfm2g driver
+#
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
+MODULE=rfm2g.ko
+MOD_DIR=/lib/modules/`uname -r`/extra
+DEVICE=rfm2g
+MODE="666"
+
+start()
+{
+	echo  "Loading Module rfm2g."
+	/sbin/insmod ${MOD_DIR}/${MODULE} $* || exit 1
+	echo "Module "${DEVICE}" has been installed."
+	# Remove stale character device nodes
+	rm -f /dev/${DEVICE}[0-4]
+	echo "Stale device nodes /dev/"${DEVICE}"[0-4] have been removed."
+
+	# Determine the major device number
+	major=`cat /proc/devices | awk "\\$2==\"$DEVICE\" {print \\$1}"`
+	echo "New major device number is "${major}"."
+
+	# Determine how many RFM devices are present
+	count=`cat /proc/rfm2g | grep RFM2G_DEVICE_COUNT | awk '{print $2}'`
+
+	# Create new character device nodes
+	minor=0
+	while [ $minor -lt $count ]
+	do
+    		mknod /dev/${DEVICE}${minor} c ${major} ${minor}
+    		echo "New device node /dev/"${DEVICE}${minor}" has been created."
+    		minor=`expr $minor + 1`
+	done
+
+	# Set permissions
+	chmod ${MODE} /dev/${DEVICE}[0-4]
+}
+
+stop()
+{
+	# Remove the module
+	/sbin/rmmod ${DEVICE} $* || exit 1
+	echo "Module "${DEVICE}" has been removed."
+
+	# Remove character device nodes
+	rm -f /dev/${DEVICE}[0-4]
+	echo "Device nodes /dev/"${DEVICE}"[0-4] have been removed."
+
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	*)
+		echo "Usage: $0 {start|stop}"
+esac
