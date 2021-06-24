@@ -57,6 +57,8 @@ $Modtime: 9/03/10 1:53p $
 #include "rfm2g_defs_linux.h"
 #include "rfm2g_ioctl.h"
 
+#include <linux/fs.h>
+
 /*****************************************************************************/
 
 #ifndef RFM2G_DYNAMIC_MAJOR_NUMBER
@@ -218,11 +220,11 @@ typedef struct
 /*** Prototypes **************************************************************/
 
 /* Proc Page stuff */
-#if LINUX_VERSION_CODE < KERNEL_VERSION(3,10,0)
-extern struct proc_dir_entry rfm2gProcEntry;
-#else
+//#if LINUX_VERSION_CODE < KERNEL_VERSION(3,10,0)
+//extern struct proc_dir_entry rfm2gProcEntry;
+//#else
 extern struct file_operations rfm2gFOS;
-#endif
+//#endif
 
 /* PCI hardware probe stuff */
 RFM2G_INT32 rfm2gCountDevices(RFM2G_INT32 maxCount, struct pci_dev *device_list[]);
@@ -248,12 +250,12 @@ RFM2G_INT32 CancelInterrupt(RFM2GEVENTINFOLINUX *eventinfo, RFM2G_BOOL locked);
 
 /* Standard file operations entry points */
 int rfm2g_open(struct inode *inode, struct file *filp);
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,37)
-int rfm2g_ioctl( struct inode *inode, struct file *filp, unsigned int cmd,
-    unsigned long arg );
-#else
+//#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,37)
+//int rfm2g_ioctl( struct inode *inode, struct file *filp, unsigned int cmd,
+//    unsigned long arg );
+//#else
 long rfm2g_ioctl(struct file *filp, unsigned int cmd, unsigned long arg );
-#endif
+//#endif
 
 int rfm2g_release(struct inode *inode, struct file *filp);
 loff_t rfm2g_llseek( struct file *filp, loff_t offset, int whence );
@@ -295,10 +297,10 @@ int rfm2g_mmap(struct file *filp, struct vm_area_struct *vma);
   /* Our file operations table */
   struct file_operations rfm2g_fops =
   {
-      owner:    THIS_MODULE,
-      llseek:   rfm2g_llseek,
-      read:     rfm2g_read,
-      write:    rfm2g_write,
+      .owner =    THIS_MODULE,
+      .llseek =   rfm2g_llseek,
+      .read =     rfm2g_read,
+      .write =    rfm2g_write,
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,37)
       ioctl:    rfm2g_ioctl,
 #else

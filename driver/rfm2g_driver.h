@@ -44,7 +44,9 @@ $Modtime: 9/03/10 1:16p $
 /* Kernel Device Driver - This is defined in Makefile_PPC */
 #ifdef CFG_RFM_KERNEL_DRIVER
 
+/*
 #include <linux/config.h>
+*/
 #include <net/rfm2g/rfm2g_kinc.h>
 
 /* Installable Device Driver */
@@ -53,6 +55,7 @@ $Modtime: 9/03/10 1:16p $
 #endif
 
 /* Common System Headers */
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -68,10 +71,12 @@ $Modtime: 9/03/10 1:16p $
 #include <linux/spinlock.h>
 #include <linux/delay.h>
 #include <linux/interrupt.h>
+#include <linux/seq_file.h>
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,18)
-#include <linux/devfs_fs_kernel.h>
-#endif
+
+//#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,18)
+//#include <linux/devfs_fs_kernel.h>
+//#endif
 
 /* Kernel Device Driver */
 #ifdef CFG_RFM_KERNEL_DRIVER

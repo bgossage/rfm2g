@@ -195,10 +195,11 @@ struct proc_dir_entry rfm2gProcEntry =
 
 #else
 
+/*
 #include <linux/module.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
-
+*/
 static char myBuff[1048];
 
 static int rfm2gFSshow(struct seq_file *m, void *v)
