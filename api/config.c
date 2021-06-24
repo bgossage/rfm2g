@@ -132,7 +132,7 @@ RFM2gUserMemory( RFM2GHANDLE rh, volatile void **UserMemoryPtr, RFM2G_UINT64 Off
 {
     void *MappedRfm2g;
     RFM2G_STATUS stat;
-    RFM2G_UINT32 Offset32;
+    RFM2G_UINT32 Offset32 = 0;
 
     stat = RFM2gCheckHandle(rh);
 

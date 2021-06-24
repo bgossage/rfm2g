@@ -14,14 +14,14 @@
 . /lib/lsb/init-functions
 
 MODULE=rfm2g.ko
-MOD_DIR=/lib/modules/`uname -r`/extra
+MOD_DIR=/lib/modules/`uname -r`/misc
 DEVICE=rfm2g
 MODE="666"
 
 start()
 {
 	echo  "Loading Module rfm2g."
-	/sbin/insmod -f ${MOD_DIR}/${MODULE} $* || exit 1
+	/sbin/insmod ${MOD_DIR}/${MODULE} $* || exit 1
 	echo "Module "${DEVICE}" has been installed."
 	# Remove stale character device nodes
 	rm -f /dev/${DEVICE}[0-4]

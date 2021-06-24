@@ -21,7 +21,7 @@
 # The SUBDIRS macro lists the individual components which are to be
 # manipulated.
 #
-SUBDIRS	=driver api diags
+SUBDIRS	=driver api diags samples
 #
 # All targets share a common set of rules
 #

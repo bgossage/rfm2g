@@ -45,6 +45,14 @@ $Modtime: 9/03/10 1:16p $
 */
 #include "rfm2g_driver.h"
 
+// PJ: missing prototypes, to be resolved
+//extern int signal_pending ( struct task_struct *p );
+static inline int signal_pending ( struct task_struct *p )
+{
+    return unlikely(test_tsk_thread_flag(p,TIF_SIGPENDING));
+}
+
+
 /*** Local prototypes ********************************************************/
 
 #ifdef __cplusplus
@@ -949,7 +957,7 @@ WaitForInterrupt( RFM2GEVENTINFOLINUX *eventinfo, unsigned long ulFlags )
     unsigned long flags = ulFlags;   /* Save and restore flags with spinlocks */
     unsigned int  timeout = 0; /* Msecs converted into jiffies          */
     RFM2G_UINT8 unit = eventinfo->Unit;
-    wait_queue_t wait;
+    wait_queue_entry_t wait;
     RFM2G_UINT8 * orbase;
     RFM2G_UINT8 * csbase;
     RFM2GCONFIGLINUX  *cfg;    /* This RFM's config struct          */
@@ -1256,7 +1264,7 @@ DoDMAWithWaitForInt( RFM2GEVENTINFOLINUX *eventinfo, unsigned long ulFlags )
 	unsigned long flags = ulFlags;   /* Save and restore flags with spinlocks */
 	unsigned int  timeout = 0; /* Msecs converted into jiffies          */
 	RFM2G_UINT8 unit = eventinfo->Unit;
-	wait_queue_t wait;
+	wait_queue_entry_t wait;
 	RFM2G_UINT8 * orbase;
 	RFM2G_UINT8 * csbase;
 	RFM2GCONFIGLINUX  *cfg;    /* This RFM's config struct          */

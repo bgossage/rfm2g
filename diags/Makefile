@@ -42,13 +42,16 @@
 
 MACH_TYPE:=$(shell uname -m)
 
-ifeq ($(MACH_TYPE), x86_64)
-API_LIBDIR	=/usr/lib64/rfm2g
-PTHREAD_LIBDIR	=/usr/lib64
-else
-API_LIBDIR	=/usr/lib/rfm2g
-PTHREAD_LIBDIR	=/usr/lib
-endif
+#ifeq ($(MACH_TYPE), x86_64)
+#API_LIBDIR	=/usr/lib64/rfm2g
+#PTHREAD_LIBDIR	=/usr/lib64
+#else
+#API_LIBDIR	=/usr/lib/rfm2g
+#PTHREAD_LIBDIR	=/usr/lib
+#endif
+
+API_LIBDIR	= ../include
+PTHREAD_LIBDIR	= ../api
 HFILES	=${API_LIBDIR}/rfm2g_api.h 
 CFLAGS	=-Wall -I${API_LIBDIR} -DRFM2G_LINUX
 
@@ -62,9 +65,8 @@ rfm2g_util:	$(OBS)
 rfm2g_util.o:$(HFILES) rfm2g_util.c
 
 clean:
-	rm -f *.o core
+	rm -f *.o rfm2g_util core
 
 install: all
 
 uninstall: clean
-	rm -f rfm2g_util

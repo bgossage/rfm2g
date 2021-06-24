@@ -66,10 +66,10 @@ HFILES  =../include/rfm2g_api.h       \
          ../include/rfm2g_osspec.h    \
          ../include/rfm2g_defs_linux.h
 
-CFLAGS = -Wall -I../include 
+CFLAGS = -Wall -Wextra -I../include 
 
 ${LIB}: ${LIBOBS}
-	ar -cruvs ${LIB} $?
+	ar -crvs ${LIB} $?
 
 all:	${LIB}
 

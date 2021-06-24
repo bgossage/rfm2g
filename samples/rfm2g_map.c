@@ -87,7 +87,7 @@ main( int argc, char *argv[] )
 
     clearerr(stdin);
 
-    printf("Please enter device number: ");
+    printf("Please enter device number (0-4): ");
 
     while ((fgets( device, sizeof(device), stdin ) == (char *) NULL ) ||
            (strlen(device) < 2))

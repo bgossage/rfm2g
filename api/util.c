@@ -956,7 +956,7 @@ STDRFM2GCALL RFM2gGetSlidingWindow(RFM2GHANDLE rh, RFM2G_UINT32 *offset,
 STDRFM2GCALL RFM2gSetSlidingWindow(RFM2GHANDLE rh, RFM2G_UINT32 offset)
 {
     RFM2G_STATUS  status;
-    RFM2G_UINT32  installedRam;
+    RFM2G_UINT32  installedRam = 0;
     RFM2G_UINT32  windowSize;
     RFM2G_UINT8   boardRev;
     RFM2GCONFIG   config;

@@ -82,7 +82,7 @@ rfm2g_init_module(void)
 
     /* Default debug flags */
     rfm2gDebugFlags = RFM2G_DBERROR;
-/*	rfm2gDebugFlags = 0xffff; */
+    //rfm2gDebugFlags = 0xffff;
 
     WHENDEBUG(RFM2G_DBINIT)printk(KERN_ERR"%s: Entering %s\n", devname, me);
 
@@ -205,6 +205,8 @@ rfm2g_cleanup_module(void)
     RFM2GCONFIGLINUX  *cfg;         /* Local pointer to config structure         */
     int i;
     RFM2G_INT32 result;
+
+printk( "%s:%s\n", devname, me );
 
     WHENDEBUG(RFM2G_DBINIT) printk(KERN_ERR"%s: Entering %s\n", devname, me);
     /* Now silence each device */

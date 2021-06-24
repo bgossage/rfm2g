@@ -74,6 +74,12 @@ $Modtime: 9/03/10 1:16p $
 #define RFM2G_MEMORY_SPACE  1
 #define RFM2G_IO_SPACE      2
 
+// PJ: missing prototypes, to be resolved
+#define copy_to_user _copy_to_user
+#define copy_from_user _copy_from_user
+extern unsigned long _copy_to_user ( void __user * to, const void * fm, unsigned long n );
+extern unsigned long _copy_from_user ( void * to, const void __user * fm, unsigned long n );
+
 /*** Local prototypes ********************************************************/
 
 #ifdef __cplusplus
@@ -392,7 +398,7 @@ rfm2g_llseek( struct file *filp, loff_t offset, int whence )
 
 
     /* Extract the minor number so we know which RFM device to access */
-    unit = MINOR( filp->f_dentry->d_inode->i_rdev );
+    unit = MINOR( filp->f_path.dentry->d_inode->i_rdev );
     cfg = &(rfm2gDeviceInfo[unit].Config );
 
     WHENDEBUG(RFM2G_DBTRACE) printk(KERN_ERR"%s%d: Entering %s\n", devname,
@@ -479,7 +485,7 @@ rfm2g_read( struct file *filp, char *buf, size_t count, loff_t *offset )
     l_offset = (RFM2G_UINT32) *offset;
 
     /* Extract the minor number so we know which RFM device to access */
-    unit = MINOR( filp->f_dentry->d_inode->i_rdev );
+    unit = MINOR( filp->f_path.dentry->d_inode->i_rdev );
 
     WHENDEBUG(RFM2G_DBTRACE) printk(KERN_ERR"%s%d: Entering %s\n", devname,
                                     unit, me);
@@ -571,7 +577,7 @@ rfm2g_write( struct file *filp, const char *buf, size_t count, loff_t *offset )
     l_offset = (RFM2G_UINT32) *offset;
 
     /* Extract the minor number so we know which RFM device to access */
-    unit = MINOR( filp->f_dentry->d_inode->i_rdev );
+    unit = MINOR( filp->f_path.dentry->d_inode->i_rdev );
 
     WHENDEBUG(RFM2G_DBTRACE) printk(KERN_ERR"%s%d: Entering %s\n", devname,
                                     unit, me);
@@ -1047,7 +1053,7 @@ rfm2g_mmap( struct file *filp, struct vm_area_struct *vma )
 
 
     /* Extract the minor number so we know which RFM device to access */
-    unit = MINOR( filp->f_dentry->d_inode->i_rdev );
+    unit = MINOR( filp->f_path.dentry->d_inode->i_rdev );
     cfg = &(rfm2gDeviceInfo[unit].Config );
 
     WHENDEBUG(RFM2G_DBTRACE) printk(KERN_ERR"%s%d: Entering %s\n", devname,
@@ -1323,7 +1329,7 @@ rfm2g_ioctl(struct file *filp, unsigned int cmd, unsigned long arg )
     RFM2G_UINT32 stat;
 
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,36)
-    	struct inode *inode = filp->f_dentry->d_inode;
+    	struct inode *inode = filp->f_path.dentry->d_inode;
 #endif
 
 	/* Valid Call? */

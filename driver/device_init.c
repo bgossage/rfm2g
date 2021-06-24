@@ -217,6 +217,8 @@ rfm2gInitDevice( RFM2GDEVICEINFO *pDeviceInfo, struct pci_dev *dev, RFM2G_UINT8 
 #endif
     strcat(cfg->Device, cInst);
 
+printk( "%s%d:%s Device = %s\n", devname, pDeviceInfo->unit, me, cfg->Device );
+
     /* Get the device ID, e.g. 0x5565 */
     result = pci_read_config_word( dev, PCI_DEVICE_ID, &device );
 
@@ -254,6 +256,8 @@ rfm2gInitDevice( RFM2GDEVICEINFO *pDeviceInfo, struct pci_dev *dev, RFM2G_UINT8 
     	printk( KERN_ERR "%s%d:%s PCI irq # %d.\n", devname, pDeviceInfo->unit, me, cfg->PCI.interruptNumber );
     }
 
+//printk( "%s%d:%s RFM2G_DBTRACE=%d, rfm2gDebugFlags=0x%x (%d)\n",
+//    devname, pDeviceInfo->unit, me, RFM2G_DBTRACE, rfm2gDebugFlags, rfm2gDebugFlags );
 
     /* Get the PCI physical address for the local, runtime and DMA Registers
         on the RFM board (rfmor) */
